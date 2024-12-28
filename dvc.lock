@@ -1,0 +1,109 @@
+schema: '2.0'
+stages:
+  data_collection:
+    cmd: python src/data/data_collection.py
+    deps:
+    - path: src/data/data_collection.py
+      hash: md5
+      md5: 725010b5932df68a554c0618246300c8
+      size: 1939
+    params:
+      params.yaml:
+        data_collection.test_size: 0.2
+    outs:
+    - path: data/raw
+      hash: md5
+      md5: 78fd7b8f78eb85230a2f0326ee56eb43.dir
+      size: 382430
+      nfiles: 2
+  data_preprocessing:
+    cmd: python src/data/data_preprocessing.py
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: 78fd7b8f78eb85230a2f0326ee56eb43.dir
+      size: 382430
+      nfiles: 2
+    - path: src/data/data_preprocessing.py
+      hash: md5
+      md5: 86a7d93dee7935e056e5569bb7cb46df
+      size: 2008
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: 55fe3ee01d065f59dbc58cf2d9c02031.dir
+      size: 383718
+      nfiles: 2
+  model_training:
+    cmd: python src/model/model_training.py
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: 55fe3ee01d065f59dbc58cf2d9c02031.dir
+      size: 383718
+      nfiles: 2
+    - path: src/model/model_training.py
+      hash: md5
+      md5: 8bcecd3bf530c83ed21fcde088284ab1
+      size: 3451
+    params:
+      params.yaml:
+        model_training.criterion: gini
+        model_training.max_depth: 10
+        model_training.min_samples_leaf: 1
+        model_training.min_samples_split: 2
+    outs:
+    - path: models/model.pkl
+      hash: md5
+      md5: 455981bb5ebc151cc69d2bde0d1d9d9c
+      size: 4333
+  model_evalution:
+    cmd: python src/model/model_evalution.py
+    deps:
+    - path: models/model.pkl
+      hash: md5
+      md5: a838878fa67f8b568a916cf844b1ee17
+      size: 4333
+    - path: src/model/model_evalution.py
+      hash: md5
+      md5: 56d375609db32b12aca476fdc54c6fb5
+      size: 3160
+    outs:
+    - path: reports/metrics.json
+      hash: md5
+      md5: ebf2ebccb1e77ee99ea092fbd023c7d5
+      size: 85
+  preprocessing:
+    cmd: python src/data/data_preprocessing.py
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: 78fd7b8f78eb85230a2f0326ee56eb43.dir
+      size: 382430
+      nfiles: 2
+    - path: src/data/data_preprocessing.py
+      hash: md5
+      md5: 86a7d93dee7935e056e5569bb7cb46df
+      size: 2008
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: 55fe3ee01d065f59dbc58cf2d9c02031.dir
+      size: 383718
+      nfiles: 2
+  model_evaluation:
+    cmd: python src/model/model_evaluation.py
+    deps:
+    - path: models/model.pkl
+      hash: md5
+      md5: 455981bb5ebc151cc69d2bde0d1d9d9c
+      size: 4333
+    - path: src/model/model_evaluation.py
+      hash: md5
+      md5: 56d375609db32b12aca476fdc54c6fb5
+      size: 3160
+    outs:
+    - path: reports/metrics.json
+      hash: md5
+      md5: ebf2ebccb1e77ee99ea092fbd023c7d5
+      size: 85
